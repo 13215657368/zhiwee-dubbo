@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/task
+ http://www.springframework.org/schema/task/spring-task-3.2.xsd
+ http://code.alibabatech.com/schema/dubbo
+ http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- 扫描基本包 过滤 controller 层 -->
+    <context:component-scan base-package="com.zhiwei" >
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+    <!-- 加载 properties 配置文件 -->
+   <!-- <context:property-placeholder location="classpath:db.properties" />-->
+    <context:property-placeholder location="classpath:*.properties" />
+
+
+    <aop:aspectj-autoproxy  /><!-- aop -->
+
+
+    <!-- 配置 c3p0 数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"></property>
+        <property name="jdbcUrl" value="${jdbc.url}"></property>
+        <property name="user" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+    <!-- 配置事务管理器 -->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 设置事物增强 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="query*" read-only="true" />
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="insert*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- aop 切面配置 -->
+    <aop:config>
+        <aop:pointcut id="servicePointcut"
+                      expression="execution(* com.zhiwei.service..*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="servicePointcut" />
+    </aop:config>
+    <!-- 配置 sqlSessionFactory -->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis.xml" />
+        <property name="mapperLocations"
+                  value="classpath:com/zhiwei/mapper/*.xml" />
+    </bean>
+    <!-- 配置扫描器 -->
+    <bean id="mapperScanner"
+          class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描 com.shsxt.dao 这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.zhiwei.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <!-- 设置定时任务 -->
+    <task:annotation-driven/>
+
+
+
+
+    <!--dubbo-->
+    <!-- 消费方应用名，用于计算依赖关系，不要与提供方中的name相同 -->
+    <dubbo:application name="zhiwei-consumer"/>
+
+
+    <!-- 指定注册中心 -->
+    <!--<dubbo:registry protocol="zookeeper" address="118.31.67.29:8181,118.31.67.29:8182,118.31.67.29:8183"/>-->
+    <dubbo:registry protocol="zookeeper" address="39.99.203.130:2181,39.99.203.130:2182,39.99.203.130:2183"/>
+
+
+
+    <!-- 声明需要调用的接口，远程服务代理 -->
+    <!-- timeout="10000"超时时间，如果不设置默认1秒，消费者1秒内调度不到提供者就会报错 -->
+    <dubbo:reference  timeout="50000" id="provideMenuService" interface="com.zhiwei.service.ProvideMenuService"/>
+
+
+
+
+
+
+    <!--redis配置-->
+    <!--  连接池配置  -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!--  最大连接数 -->
+        <property name="maxTotal" value="1024"/>
+        <!--  最大 空闲连接数  -->
+        <property name="maxIdle" value="200"/>
+        <!--  获取连接时最大等待毫秒数  -->
+        <property name="maxWaitMillis" value="10000"/>
+        <!--  在获取连接时检查有效性  -->
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+
+    <!--  客户端连接工厂  -->
+    <bean id="jedisConnFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:use-pool="true" p:host-name="39.99.203.130" p:port="6379">
+        <!--  连接池引用  -->
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+    </bean>
+
+
+    <!-- redisTemplate  配置  -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connection-factory-ref="jedisConnFactory">
+        <!--  配置序列化操作  -->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+    </bean>
+
+
+
+
+</beans>
