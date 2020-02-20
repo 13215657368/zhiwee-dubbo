@@ -54,6 +54,15 @@ public class CompanyNews extends BaseController {
     }
 
 
+    @RequestPermission(permissionCode = "002")
+    @RequestMapping("/listInfo")
+    @ResponseBody
+    public  List<News>   newsListInfo(){
+        List<News> n =  newsService.newsListService();
+        return   n ;
+    }
+
+
 
 
 
@@ -74,19 +83,36 @@ public class CompanyNews extends BaseController {
     @RequestPermission(permissionCode = "002")
     @RequestMapping("/detail")
     public   String   showDetail(Model model,Integer id,String artnum){
-        News  news=newsService.queryNewsByIdService(id);  //查询news表中的新闻信息
-        List<Newsimge>  imgs =  newsService.queryUrlByNum(artnum);//查询news表中的新闻信息
-        model.addAttribute("newsinfo",news);
-        model.addAttribute("imgsinfo",imgs);
+       // News  news=newsService.queryNewsByIdService(id);  //查询news表中的新闻信息
+       // List<Newsimge>  imgs =  newsService.queryUrlByNum(artnum);//查询news表中的新闻信息
+       //model.addAttribute("newsinfo",news);
+       // model.addAttribute("imgsinfo",imgs);
+
+        model.addAttribute("id",id);
+        model.addAttribute("number",artnum);
+
         return  "article-edit";
     }
+
+
+
+    @RequestPermission(permissionCode = "002")
+    @RequestMapping("/detailInfo")
+    @ResponseBody
+    public  News showDetaiInfo(Integer id,String artnum){
+        News  news=newsService.queryNewsByIdService(id);  //查询news表中的新闻信息
+        return news;
+
+    }
+
+
 
     /**
      * 新闻信息录入数据库
      */
     @RequestMapping("/add/article")
     @ResponseBody
-    public BaseResult addToArticleBase(News  news){
+    public BaseResult addToArticleBase(@RequestBody News  news){
        // News  news1  =  new News();
         String   str="";
         if(news.getIntroduction().length()>83){
@@ -210,12 +236,13 @@ public class CompanyNews extends BaseController {
      */
     @RequestMapping("/update")
     @ResponseBody
-    public  BaseResult  newsUpdate(News news){
+    public  BaseResult  newsUpdate(@RequestBody News news){
         String   str = news.getIntroduction().substring(0,80);
       /*  Date  date = new Date();
         news.setDate(date);*/
         news.setIntroduction(str);
-        return  newsService.newsUpdateService(news);
+       return  newsService.newsUpdateService(news);
+       // return   BaseResult.success();
     }
 
     /**

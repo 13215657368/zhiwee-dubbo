@@ -29,140 +29,6 @@
 </head>
 <body>
 <#include "commonHead.ftl">
-<#--<!--_header 作为公共模版分离出去&ndash;&gt;
-<header class="navbar-wrapper">
-	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl">
-			<a class="logo navbar-logo f-l mr-10 hidden-xs" href="aboutHui.shtml">admin</a>
-			<a class="logo navbar-logo-m f-l mr-10 visible-xs" href="aboutHui.shtml"></a>
-			<span class="logo navbar-slogan f-l mr-10 hidden-xs"></span>
-			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
-			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
-				<ul class="cl">
-					<li>超级管理员</li>
-					<li class="dropDown dropDown_hover">
-						<a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
-						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
-							<li>
-								<a href="#">切换账户</a>
-							</li>
-							<li>
-								<a href="#">退出</a>
-							</li>
-						</ul>
-					</li>
-					<li id="Hui-msg">
-						<a href="#" title="消息">
-						<span class="badge badge-danger">1</span>
-						<i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
-					</li>
-					<li id="Hui-skin" class="dropDown right dropDown_hover">
-						<a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
-						<ul class="dropDown-menu menu radius box-shadow">
-							<li>
-								<a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a>
-							</li>
-							<li>
-								<a href="javascript:;" data-val="blue" title="蓝色">蓝色</a>
-							</li>
-							<li>
-								<a href="javascript:;" data-val="green" title="绿色">绿色</a>
-							</li>
-							<li>
-								<a href="javascript:;" data-val="red" title="红色">红色</a>
-							</li>
-							<li>
-								<a href="javascript:;" data-val="yellow" title="黄色">黄色</a>
-							</li>
-							<li><a href="javascript:;" data-val="orange" title="橙色">橙色</a></li>
-						</ul>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</header>
-<!--/_header 作为公共模版分离出去&ndash;&gt;
-
-<!--_menu 作为公共模版分离出去&ndash;&gt;
-<aside class="Hui-aside">
-	
-	<div class="menu_dropdown bk_2">
-		<dl id="menu-article">
-			<dt class="selected"><i class="Hui-iconfont">&#xe616;</i> 新闻管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd style="display:block">
-				<ul>
-					<li class="current">
-						<a href="${ctx}/news/list" title="新闻管理">新闻管理</a>
-					</li>
-				</ul>
-			</dd>
-		</dl>
-        <dl id="menu-product">
-            <dt><i class="Hui-iconfont">&#xe616;</i> 产品管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href="${ctx}/pro/list" title="产品管理">产品发布</a></li>
-                </ul>
-            </dd>
-        </dl>
-		<dl id="menu-picture">
-			<dt><i class="Hui-iconfont">&#xe613;</i>员工风采<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li>
-						<a href="${ctx}/active/list" title="图片管理">活动管理</a>
-					</li>
-				</ul>
-			</dd>
-		</dl>
-		<dl id="menu-product">
-			<dt><i class="Hui-iconfont">&#xe620;</i> 人才招聘<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li>
-						<a href="/jobs/list" title="职位管理">职位管理</a>
-					</li>
-				</ul>
-			</dd>
-		</dl>
-		<dl id="menu-comments">
-			<dt><i class="Hui-iconfont">&#xe622;</i> 公司刊物<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li>
-						<a href="${ctx}/publication/list" title="刊物管理">刊物管理</a>
-					</li>
-				</ul>
-			</dd>
-		</dl>
-		<dl id="menu-member">
-            <dt><i class="Hui-iconfont">&#xe60d;</i> 专卖店<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd>
-                <ul>
-                    <li><a href="${ctx}/shops/list" title="专卖店管理">专卖店管理</a></li>
-
-                </ul>
-            </dd>
-		</dl>
-
-		<dl id="menu-system">
-			<dt><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li>
-						<a href="system-base.html" title="密码修改">密码修改</a>
-					</li>
-				</ul>
-			</dd>
-		</dl>
-	</div>
-</aside>
-<div class="dislpayArrow hidden-xs">
-	<a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a>
-</div>
-<!--/_menu 作为公共模版分离出去&ndash;&gt;-->
 
 
 <section class="Hui-article-box">
@@ -186,7 +52,7 @@
 				</span>
 				<#--<span class="r">共有数据：<strong>54</strong> 条</span>-->
 			</div>
-			<div class="mt-20">
+			<div id="app" class="mt-20">
 				<table class="table table-border table-bordered table-bg table-hover table-sort">
 					<thead>
 						<tr class="text-c">
@@ -201,26 +67,14 @@
 					</thead>
 					<tbody>
 
-                  <#--  <tr class="text-c">
-                        <td><input type="checkbox" value="" name=""></td>
-                        <td>01</td>
-                        <td>01</td>
-                        <td class="text-l"><u style="cursor:pointer" class="text-primary"  title="查看">01</u></td>
-                        <td>01</td>
-                        <td>2014-6-11 11:11:42</td>
-                        <td class="f-14 td-manage">
-                            <a style="text-decoration:none" class="ml-5" onClick="article_edit('新闻编辑','${ctx}/news/detail','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
-                            <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
-                        </td>
-                    </tr>
--->
+<#--
 					<#list  news as item >
 						<tr class="text-c">
 							<td><input type="checkbox" value="" name=""></td>
 							<td>${item_index+1}</td>
 							<td>${item.number}</td>
 							<td class="text-l"><u style="cursor:pointer" class="text-primary" onclick="article_content('新闻内容','${ctx}/news/show/contentPage?id=${item.id}','90%','90%')" title="查看">${item.title}</u></td>
-							<#--   <c:if test="${goodsCategory.isHot eq 0}">-->
+							&lt;#&ndash;   <c:if test="${goodsCategory.isHot eq 0}">&ndash;&gt;
 					        <td><#if item.type ==1>格力新闻</#if><#if item.type ==2>行业动态</#if><#if item.type ==3>最新活动</#if></td>
 							<td>${item.date?string('yyyy-MM-dd HH:mm:ss')}</td>
 							<td class="f-14 td-manage">
@@ -228,7 +82,27 @@
 								<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'${item.number}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
 						</tr>
-					</#list>
+					</#list>-->
+
+
+
+
+
+	<tr  v-for="(n,index) in newsList" class="text-c">
+		<td><input type="checkbox" value="" name=""></td>
+		<td>{{index+1}}</td>
+		<td>{{n.number}}</td>
+		<td class="text-l"><u style="cursor:pointer" class="text-primary">{{n.title}}</u></td>
+		<#--   <c:if test="${goodsCategory.isHot eq 0}">-->
+		<td><span  v-if="n.type==1">格力新闻</span><span   v-if="n.type==2">行业动态</span><span   v-if="n.type==3">企业文化</span></td>
+		<td>{{n.date}}</td>
+		<td class="f-14 td-manage">
+			<a style="text-decoration:none" class="ml-5" v-on:click="article_edit('编辑',n.id,n.number)" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+			<a style="text-decoration:none" class="ml-5" v-on:click="article_del(this,n.number)" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+		</td>
+	</tr>
+
+
 					</tbody>
 				</table>
 			</div>
@@ -251,7 +125,94 @@
 <script type="text/javascript" src="${ctx}/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="${ctx}/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="${ctx}/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/vuejs-2.5.16.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/axios-0.18.0.js"></script>
+
 <script type="text/javascript">
+
+
+
+
+	var  vue = new Vue({
+		el:"#app",
+		data:{
+			newsList:[]
+		},
+		methods:{
+			findAll:function () {
+				var _this=this;
+				axios.get("/news/listInfo").then(function (response) {
+					//console.log(response);
+					_this.newsList=response.data;
+				//	console.log(_this.newsList);
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+
+			},
+			article_edit:function(title,id,number){
+
+				//console.log(id);
+				//console.log(number);
+				var url = '/news/detail?id='+id+'&artnum='+number;
+				//console.log(url);
+				var index = layer.open({
+					type: 2,
+					area: ['90%', '90%'],
+					// offset: 'rb', //右下角弹出
+					title:title,
+					content: url,
+					end: function () {
+						location.reload();
+					}
+
+				});
+
+
+			},
+			article_del:function(obj,number){
+				//console.log(obj);
+
+				//return;
+
+				axios.get("/news/newsDel",{
+					params:{
+						number:number
+
+					}
+				}).then(function (response) {
+					//console.log(response);
+					//_this.newsList=response.data;
+					//	console.log(_this.newsList);
+
+					if(response.data.code==200){
+						$(obj).parents("tr").remove();
+						layer.msg('已删除!', {icon: 1, time: 1000});
+					}else{
+						layer.msg('删除失败!', {icon: 2, time: 1000});
+					}
+
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+
+			}
+
+
+
+		},
+
+		created(){
+			this.findAll();
+		}
+
+	})
+
+
+
+/*
     $('.table-sort').dataTable({
         "aaSorting": [[ 0, "desc" ]],//默认第几个排序
         "bStateSave": true,//状态保存
@@ -259,7 +220,7 @@
             //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
             {"orderable":false,"aTargets":[0,5]}// 制定列不参与排序
         ]
-    });
+    });*/
 
 
     /*新闻-内容*/

@@ -33,10 +33,11 @@
 <input    type="hidden"  id="url" >
 <article class="page-container">
 	<form class="form form-horizontal">
+		<div id="app">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
 			<div class="formControls col-xs-8 col-sm-9"><#--<#if (param.id)?exists>updateGoods<#else>addGoods</#if>-->
-				<input type="text" class="input-text"  id="title" name="title"  >
+				<input type="text" class="input-text" v-model="News.title" id="title" name="title"  >
 			</div>
 		</div>
       <#--  <div class="row cl">
@@ -49,7 +50,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>新闻类别：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="type" id="type" class="select">
+				<select v-model="News.type" name="type" id="type" class="select">
 					<option  value="0">请选择新闻类别</option>
 					<option    value="1">格力新闻</option>
 					<option value="2">行业动态</option>
@@ -66,13 +67,23 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章内容：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<textarea   style="width:100%;height:400px;" class="span12 ckeditor" id="editor" name="content">
+				<textarea   v-model="News.content" style="width:100%;height:400px;" class="span12 ckeditor" id="editor" name="content">
 
 				</textarea>
 			<#--  rows="6" cols="80"	<script id="editor"   type="text/plain" style="width:100%;height:400px;"></script>-->
 			</div>
 		</div>
 
+
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" >
+					<button  v-on:click="save()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i>发布</button>
+
+				</div>
+			</div>
+
+
+		</div>
 
 
 	</form>
@@ -117,12 +128,7 @@
         </div>
     </div>
 
-        <div class="row cl">
-            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" >
-                <button  onClick=article_save_submit(); class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i>发布</button>
 
-            </div>
-        </div>
 
 
     </form>
@@ -151,42 +157,14 @@
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/vuejs-2.5.16.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/axios-0.18.0.js"></script>
+
 <script type="text/javascript">
 
 
 
-    number="";
-    //生成随机的number码
-    $(function () {
-        // var number ="";
-        var r=parseInt(Math.random()*38);
-        var array=[];
-        for(var i=0;i<2;i++)
-        {
-            var flag=0;
-            do
-            {
-                for(var j=0;j<array.length;j++)
-                {
-                    if(array[j]==r) {flag=1;break;}
-                }
-                if(!flag)
-                {
-                    array[array.length]=r;
-                }
-                else
-                {
-                    r=parseInt(Math.random()*38);
-                }
-            }while(!flag);
-        }
-        for(var j=0;j<array.length;j++){
-            number+=array[j];
-        }
-        console.log(number);
 
-
-    })
 
 
 
@@ -194,6 +172,115 @@
 
 
     var ue = UE.getEditor('editor');
+
+
+
+
+
+
+
+
+	var vue =  new Vue({
+		el:"#app",
+		data:{
+			News:{ id:"",title:"",date:"",type:"",number:"",content:"",introduction:"",url:""},
+
+		},
+		methods:{
+			save:function(){
+
+
+			   var	number="";
+				//生成随机的number码
+				$(function () {
+					// var number ="";
+					var r=parseInt(Math.random()*38);
+					var array=[];
+					for(var i=0;i<2;i++)
+					{
+						var flag=0;
+						do
+						{
+							for(var j=0;j<array.length;j++)
+							{
+								if(array[j]==r) {flag=1;break;}
+							}
+							if(!flag)
+							{
+								array[array.length]=r;
+							}
+							else
+							{
+								r=parseInt(Math.random()*38);
+							}
+						}while(!flag);
+					}
+					for(var j=0;j<array.length;j++){
+						number+=array[j];
+					}
+					//console.log(number);
+
+
+				})
+
+
+				var  content = UE.getEditor('editor').getContent();
+				var  introduction  = UE.getEditor('editor').getContentTxt();
+
+
+
+				//alert("save");
+				var _this=this;
+				_this.News.number=number;
+				_this.News.content=content;
+				_this.News.introduction=introduction;
+				//this.News=vnews;
+				console.log(_this.News);
+				axios.post("/news/add/article",_this.News).then(function (response) {
+					//console.log(_this.News);
+					//console.log(response);
+					//_this.News=response.data;
+					//_this.selected=response.data.type;
+					console.log(response.data);
+
+					if(response.data.code==200){
+						layer.msg('添加成功',{
+							icon:1,
+							time:1000,
+							end:function(){
+								//关闭除父级外的子页面
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);//关闭当前页
+								//parent.location.reload();//刷新父级页面
+							}
+						})
+					}else {
+
+						layer.msg('添加失败，请检查对应信息是否完整',{
+							icon:2,
+							time:1000
+						})
+
+					}
+
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+
+			}
+
+		},
+
+		created(){
+			this.findById();
+		}
+
+	})
+
+
+
+
 
 
 

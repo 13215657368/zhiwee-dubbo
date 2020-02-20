@@ -30,30 +30,35 @@
 <meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
 <body>
+<input type="hidden" id="id" value="${id}">
+<input type="hidden" id="number" value="${number}">
 <input   type="hidden"  id="url" >
 <article class="page-container">
 	<form class="form form-horizontal">
+
+		<#---->
+		<div id="app">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
 			<div class="formControls col-xs-8 col-sm-9"><#--<#if (param.id)?exists>updateGoods<#else>addGoods</#if>-->
-				<input type="text" class="input-text" value="${newsinfo.title}" id="title" name="title"  >
+				<input type="text" class="input-text"  v-model="News.title" id="title" name="title"  >
 			</div>
 		</div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章编号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text"  value="${newsinfo.number}" id="number" name="number"   readonly="true">
+                <input type="text" class="input-text"  v-model="News.number" id="number" name="number"   readonly="true">
             </div>
         </div>
 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>新闻类别：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="type" id="type" class="select">
+				<select @change="changeProduct($event)" v-model="selected" name="type" id="type" class="select">
 					<option  value="0">请选择新闻类别</option>
-					<option  <#if newsinfo.type==1>selected</#if> value="1">格力新闻</option>
-					<option  <#if newsinfo.type==2>selected</#if>  value="2">行业动态</option>
-					<option  <#if newsinfo.type==3>selected</#if>  value="3">最新活动</option>
+					<option  value="1">格力新闻</option>
+					<option  value="2">行业动态</option>
+					<option  value="3">企业文化</option>
 				</select>
 				</span> </div>
 		</div>
@@ -67,18 +72,30 @@
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章内容：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<textarea   style="width:100%;height:400px;" class="span12 ckeditor"   id="editor" name="content" >
-                    ${newsinfo.content}
 				</textarea>
 			<#--  rows="6" cols="80"	<script id="editor"   type="text/plain" style="width:100%;height:400px;"></script>-->
+				<a @click="showInfo()"><u>详情</u></a>
+				<div v-show="flag" v-html="News.content"></div>
 			</div>
 		</div>
+
+
+
+
+		</div>
+		<#---->
+
+
+
 	</form>
 
 
     <input      type="hidden" id="hideUrl"  >
-	<input      type="hidden"   id="imgNum"  value="${newsinfo.number}">
+	<input      type="hidden"   id="imgNum"  value="">
 
     <form id="fileForm"  class="form form-horizontal" enctype="multipart/form-data">
+    <#---->
+    <div id="app2">
     <div class="row cl">
        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>新闻图：</label>
         <div class="formControls col-xs-8 col-sm-9">
@@ -89,7 +106,7 @@
                 <a style="text-decoration:none" class="ml-5"  id="delImg" onClick="img_del()" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
             </a>-->
 
-
+			<#---->
             <div class="uploader-thum-container">
 
 					<span class="btn-upload form-group">
@@ -105,13 +122,13 @@
 
 
 				<a id="pic"></a>
-                <#list imgsinfo as  item>
+               <#-- <#list imgsinfo as  item>
                 <a id="apic" >
                     <img  alt="图片"  style="opacity: 1"  width=90px height=90px id="pic" src="${item.imgurl}"/>
                     <a style="text-decoration:none" class="ml-5"  id="delImg" onClick="img_del('${item.imgurl}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 					<input type="hidden" id="modifyUrl" value="${item.imgurl}">
                 </a>
-                </#list>
+                </#list>-->
 
 
 
@@ -125,18 +142,22 @@
 			<#--	&nbsp;&nbsp;
                 <button id="imgSubmit">图片入库</button>-->
 
-
-            </div>
-
+			</div>
+			<#---->
+		</div>
+	</div>
 			<br>
 
-            <div class="row cl">
-                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" align="center">
-                    <button  onClick=article_save_submit(); class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i>更新发布</button>
 
-                </div>
-            </div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2" align="center">
+				<button  @click="update"  type="button" class="btn btn-primary radius" ><i class="Hui-iconfont">&#xe632;</i>更新发布</button>
 
+			</div>
+		</div>
+
+
+<div>
 
     </form>
 
@@ -162,9 +183,16 @@
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="${ctx}/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/vuejs-2.5.16.js"></script>
+<script type="text/javascript" src="${ctx}/lib/vue/axios-0.18.0.js"></script>
+
 <script type="text/javascript">
 
     var ue = UE.getEditor('editor');
+
+
+
+
 
 
 
@@ -204,6 +232,13 @@
 		})
 
      }
+
+
+
+
+
+
+
 
 
 
@@ -380,5 +415,160 @@
 
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
+
+<script>
+
+	var  vnews;
+
+	var  vselectd;
+
+	var vue =  new Vue({
+		el:"#app",
+		data:{
+			News:{ id:"",title:"",date:"",type:"",number:"",content:"",introduction:"",url:""},
+			flag:false,
+			selected:''
+
+			},
+		methods:{
+			findById:function(){
+				var _this=this;
+				axios.get("/news/detailInfo",{
+					params: {
+						id: $("#id").val()
+					}
+				}).then(function (response) {
+					//console.log(response);
+					_this.News=response.data;
+					vnews=response.data;
+					_this.selected=response.data.type;
+					vselectd=response.data.type;
+					//	console.log(_this.News);
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+			},
+			showInfo:function(){
+				//alert("显示");
+				this.flag=!this.flag;
+			},
+			changeProduct:function(event) {
+				this.selected = event.target.value; //获取商品ID，即option对应的ID值
+				vselectd = event.target.value;
+				//console.log(this.selected)
+			},
+
+			update:function(){
+					alert("update");
+				var _this=this;
+				//this.News=vnews;
+				//console.log(vnews);
+				axios.post("/news/update",_this.News).then(function (response) {
+					//console.log(_this.News);
+					//console.log(response);
+					//_this.News=response.data;
+					//_this.selected=response.data.type;
+					console.log(response.data);
+
+					if(response.data.code==200){
+						layer.msg('更新成功',{
+							icon:1,
+							time:1000,
+							end:function(){
+								//关闭除父级外的子页面
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);//关闭当前页
+								//parent.location.reload();//刷新父级页面
+							}
+						})
+					}else {
+
+						layer.msg('更新失败，请检查对应信息是否完整',{
+							icon:2,
+							time:1000
+						})
+
+					}
+
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+
+		}
+
+		},
+
+		created(){
+			this.findById();
+		}
+
+	})
+
+	var  vue2 = new Vue({
+
+
+		el:"#app2",
+		data:{
+			News:{ id:"",title:"",date:"",type:"",number:"",content:"",introduction:"",url:""},
+
+		},
+		methods:{
+				update:function(){
+
+
+				var content = UE.getEditor('editor').getContent();
+				var introduction  = UE.getEditor('editor').getContentTxt();
+					//	alert("update");
+				var _this=this;
+				this.News=vnews;
+				//console.log(vselectd);
+				vnews.type=vselectd;
+				vnews.content=content;
+				vnews.introduction=introduction;
+				axios.post("/news/update",vnews).then(function (response) {
+					//console.log(_this.News);
+					//console.log(response);
+					//_this.News=response.data;
+					//_this.selected=response.data.type;
+						console.log(response.data);
+
+						if(response.data.code==200){
+							layer.msg('更新成功',{
+								icon:1,
+								time:1000,
+								end:function(){
+									//关闭除父级外的子页面
+									var index = parent.layer.getFrameIndex(window.name);
+									parent.layer.close(index);//关闭当前页
+									//parent.location.reload();//刷新父级页面
+								}
+							})
+						}else {
+
+							layer.msg('更新失败，请检查对应信息是否完整',{
+								icon:2,
+								time:1000
+							})
+
+						}
+
+				}).catch(function (err) {
+					console.log(err);
+
+				})
+
+			}
+		}
+
+
+	})
+
+</script>
+
+
+
+
 </body>
 </html>
